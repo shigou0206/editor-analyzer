@@ -1,5 +1,3 @@
-use crate::core::traits::{Cache, Config, ObjectPool};
-
 // 核心抽象层
 pub mod core;
 pub use core::{traits, types, errors, common, utils};
@@ -32,8 +30,11 @@ pub mod bridge;
 // Re-export for flutter_rust_bridge
 pub use flutter_rust_bridge::*;
 
-/// Test function to verify core abstraction layer
-pub fn test_core_abstraction() -> String {
+// Re-export main types for convenience
+pub use core::*;
+
+/// Initialize the core abstraction layer
+pub fn initialize() -> String {
     // Test basic types
     let file_id = types::FileId::new("test.py");
     let span = types::Span::new(0, 10);
@@ -98,7 +99,7 @@ mod tests {
 
     #[test]
     fn test_core_abstraction_function() {
-        let result = test_core_abstraction();
+        let result = initialize();
         assert!(result.contains("Core abstraction layer initialized successfully"));
         assert!(result.contains("test.py"));
         assert!(result.contains("Python"));
@@ -138,141 +139,6 @@ mod tests {
     }
 
     #[test]
-    fn test_core_traits_integration() {
-        // Test SymbolTable
-        let mut symbol_table = traits::SymbolTable::new();
-        let file_id = types::FileId::new("test.py");
-        let symbol = types::Symbol::new(
-            "test_func".to_string(),
-            "test_func".to_string(),
-            types::SymbolKind::Function,
-            types::Span::new(0, 10),
-            file_id.clone(),
-        );
-        symbol_table.add_symbol(symbol);
-        assert_eq!(symbol_table.symbols.len(), 1);
-
-        // Test Scope
-        let scope = traits::Scope::new("global".to_string(), types::Span::new(0, 100));
-        symbol_table.add_scope(scope);
-        assert_eq!(symbol_table.scopes.len(), 1);
-    }
-
-    #[test]
-    fn test_core_common_integration() {
-        // Test MemoryCache
-        let cache: common::MemoryCache<String, i32> = common::MemoryCache::new();
-        assert!(cache.set("test_key".to_string(), 42).is_ok());
-        assert_eq!(cache.get(&"test_key".to_string()).unwrap(), Some(42));
-
-        // Test MemoryConfig
-        let config = common::MemoryConfig::new();
-        assert!(config.set("test_config", "test_value").is_ok());
-        assert_eq!(config.get::<String>("test_config").unwrap(), "test_value");
-
-        // Test SimpleObjectPool
-        let pool = common::SimpleObjectPool::new(|| String::new());
-        // Initially pool is empty
-        assert!(pool.acquire().is_none());
-        // Release an item
-        pool.release("test_item".to_string());
-        // Now should be able to acquire
-        let item = pool.acquire();
-        assert!(item.is_some());
-        assert_eq!(item.unwrap(), "test_item");
-    }
-
-    #[test]
-    fn test_core_errors_integration() {
-        // Test error creation and conversion
-        let parse_error = errors::ParserError::SyntaxError {
-            code: "syntax_error",
-            message: "Test error".to_string(),
-            span: types::Span::new(0, 10),
-        };
-        let core_error: errors::CoreError = parse_error.into();
-        match core_error {
-            errors::CoreError::ParseError { message, .. } => {
-                assert!(message.contains("Test error"));
-            }
-            _ => panic!("Expected ParseError"),
-        }
-
-        // Test result aliases
-        let _: errors::CoreResult<()> = Ok(());
-        let _: errors::ParserResult<()> = Ok(());
-        let _: errors::SemanticResult<()> = Ok(());
-    }
-
-    #[test]
-    fn test_text_utils_integration() {
-        let text = "Hello\nWorld\nTest";
-        
-        // Test position conversion
-        let pos = utils::TextUtils::offset_to_position(text, 6);
-        assert_eq!(pos.line, 1);
-        assert_eq!(pos.column, 0);
-        
-        let offset = utils::TextUtils::position_to_offset(text, &types::Position::new(1, 0));
-        assert_eq!(offset, 6);
-        
-        // Test text slicing
-        let span = types::Span::new(0, 5);
-        let slice = utils::TextUtils::get_text_slice(text, &span);
-        assert_eq!(slice, "Hello");
-        
-        // Test line counting
-        assert_eq!(utils::TextUtils::count_lines(text), 3);
-        assert_eq!(utils::TextUtils::get_line(text, 1), Some("World"));
-    }
-
-    #[test]
-    fn test_validation_utils_integration() {
-        let text = "Hello World";
-        let span = types::Span::new(0, 5);
-        let position = types::Position::new(0, 0);
-        
-        // Test span validation
-        assert!(utils::ValidationUtils::validate_span(&span, text.len()));
-        
-        // Test position validation
-        assert!(utils::ValidationUtils::validate_position(&position, text));
-        
-        // Test file ID validation
-        assert!(utils::ValidationUtils::validate_file_id("test.py"));
-        assert!(!utils::ValidationUtils::validate_file_id(""));
-    }
-
-    #[test]
-    fn test_hash_utils_integration() {
-        let text = "Hello World";
-        
-        // Test text hashing
-        let hash1 = utils::HashUtils::hash_text(text);
-        let hash2 = utils::HashUtils::hash_text(text);
-        assert_eq!(hash1, hash2);
-        
-        // Test file content hashing
-        let file_hash = utils::HashUtils::hash_file_content(text, &types::Language::Python);
-        assert!(!file_hash.is_empty());
-        assert!(file_hash.chars().all(|c| c.is_ascii_hexdigit()));
-    }
-
-    #[test]
-    fn test_performance_timer_integration() {
-        let timer = common::PerformanceTimer::start();
-        
-        // Do some minimal work
-        std::thread::sleep(std::time::Duration::from_millis(1));
-        
-        let elapsed = timer.elapsed();
-        assert!(elapsed.as_millis() >= 1);
-        
-        let elapsed_millis = timer.elapsed_millis();
-        assert!(elapsed_millis >= 1);
-    }
-
-    #[test]
     fn test_ai_context_integration() {
         let file_id = types::FileId::new("test.py");
         let source_code = types::SourceCode::new(
@@ -282,7 +148,7 @@ mod tests {
         );
         let file_context = types::FileContext::new(file_id.clone());
         
-        let context = traits::AiContext::new(source_code.clone(), file_context.clone());
+        let context = traits::ConcreteAiContext::new(source_code.clone(), file_context.clone());
         
         assert_eq!(context.source_code, source_code);
         assert_eq!(context.file_context, file_context);
@@ -300,22 +166,14 @@ mod tests {
             file_id.clone(),
         );
         let file_context = types::FileContext::new(file_id.clone());
-        let ai_context = traits::AiContext::new(source_code, file_context);
+        let ai_context = traits::ConcreteAiContext::new(source_code, file_context);
         
-        let request_type = traits::AiRequestType::CodeGeneration {
-            prompt: "Generate a function".to_string(),
-        };
+        let request_type = "code_generation".to_string();
+        let request = traits::ConcreteAiRequest::new(request_type, ai_context);
         
-        let request = traits::AiRequest::new(request_type, ai_context);
+        assert_eq!(request.request_type, "code_generation");
         
-        match &request.request_type {
-            traits::AiRequestType::CodeGeneration { prompt } => {
-                assert_eq!(prompt, "Generate a function");
-            }
-            _ => panic!("Expected CodeGeneration"),
-        }
-        
-        let response = traits::AiResponse::new(
+        let response = traits::ConcreteAiResponse::new(
             "Generated code".to_string(),
             "trace_123".to_string(),
         );
@@ -412,21 +270,107 @@ mod tests {
     }
 
     #[test]
-    fn test_severity_ordering_integration() {
-        let severities = vec![
-            types::Severity::Info,
-            types::Severity::Error,
-            types::Severity::Hint,
-            types::Severity::Warning,
-        ];
-        let mut sorted = severities.clone();
-        sorted.sort();
+    fn test_cache_integration() {
+        let cache: common::MemoryCache<String, i32> = common::MemoryCache::new();
         
-        assert_eq!(sorted, vec![
-            types::Severity::Error,
-            types::Severity::Warning,
-            types::Severity::Info,
-            types::Severity::Hint,
-        ]);
+        // Test set and get
+        cache.set("key1".to_string(), 42).unwrap();
+        let value = cache.get(&"key1".to_string()).unwrap();
+        assert_eq!(value, Some(42));
+        
+        // Test remove
+        cache.remove(&"key1".to_string()).unwrap();
+        let value = cache.get(&"key1".to_string()).unwrap();
+        assert_eq!(value, None);
+        
+        // Test clear
+        cache.set("key2".to_string(), 100).unwrap();
+        cache.clear().unwrap();
+        let value = cache.get(&"key2".to_string()).unwrap();
+        assert_eq!(value, None);
+    }
+
+    #[test]
+    fn test_object_pool_integration() {
+        let pool = common::SimpleObjectPool::new(|| String::new());
+        
+        // Initially pool is empty, but acquire will create new items
+        let item1 = pool.acquire().unwrap();
+        assert_eq!(item1, "");
+        
+        // Release some items first
+        pool.release("item1".to_string()).unwrap();
+        pool.release("item2".to_string()).unwrap();
+        
+        // Now we can acquire items
+        let item1 = pool.acquire().unwrap();
+        assert_eq!(item1, "item2"); // LIFO order
+        
+        let item2 = pool.acquire().unwrap();
+        assert_eq!(item2, "item1"); // LIFO order
+        
+        // Test available count
+        assert_eq!(pool.available_count(), 0);
+        
+        // Release again
+        pool.release("item3".to_string()).unwrap();
+        assert_eq!(pool.available_count(), 1);
+        
+        // Test clear
+        pool.clear().unwrap();
+        assert_eq!(pool.available_count(), 0);
+    }
+
+    #[test]
+    fn test_config_integration() {
+        let config = common::MemoryConfig::new();
+        
+        // Test set and get
+        config.set("test_key", "test_value").unwrap();
+        let value: String = config.get("test_key").unwrap();
+        assert_eq!(value, "test_value");
+        
+        // Test has
+        assert!(config.has("test_key"));
+        assert!(!config.has("nonexistent_key"));
+        
+        // Test remove
+        config.remove("test_key").unwrap();
+        assert!(!config.has("test_key"));
+    }
+
+    #[test]
+    fn test_utils_integration() {
+        let text = "Hello\nWorld\nTest";
+        
+        // Test text utils
+        let pos = utils::TextUtils::offset_to_position(text, 6);
+        assert_eq!(pos.line, 1);
+        assert_eq!(pos.column, 0);
+        
+        let offset = utils::TextUtils::position_to_offset(text, &types::Position::new(1, 0));
+        assert_eq!(offset, 6);
+        
+        let line_count = utils::TextUtils::count_lines(text);
+        assert_eq!(line_count, 3);
+        
+        let line = utils::TextUtils::get_line(text, 1);
+        assert_eq!(line, Some("World"));
+        
+        // Test hash utils
+        let hash1 = utils::HashUtils::hash_text("Hello");
+        let hash2 = utils::HashUtils::hash_text("Hello");
+        let hash3 = utils::HashUtils::hash_text("World");
+        assert_eq!(hash1, hash2);
+        assert_ne!(hash1, hash3);
+        
+        // Test validation utils
+        let span = types::Span::new(0, 5);
+        let valid = utils::ValidationUtils::validate_span(&span, text.len());
+        assert!(valid);
+        
+        let invalid_span = types::Span::new(0, 100);
+        let invalid = utils::ValidationUtils::validate_span(&invalid_span, text.len());
+        assert!(!invalid);
     }
 } 

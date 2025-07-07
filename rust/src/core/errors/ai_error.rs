@@ -1,4 +1,5 @@
 use thiserror::Error;
+use crate::core::errors::codes;
 
 /// AI service error
 #[derive(Error, Debug, PartialEq, Eq)]
@@ -23,6 +24,43 @@ pub enum AiError {
 }
 
 impl AiError {
+    /// 构造函数，自动填充 code
+    pub fn api_call_failed(message: String) -> Self {
+        AiError::ApiCallFailed {
+            code: codes::ai::API_CALL_FAILED,
+            message,
+        }
+    }
+    pub fn authentication_failed(message: String) -> Self {
+        AiError::AuthenticationFailed {
+            code: codes::ai::ALL,
+            message,
+        }
+    }
+    pub fn quota_exceeded(message: String) -> Self {
+        AiError::QuotaExceeded {
+            code: codes::ai::ALL,
+            message,
+        }
+    }
+    pub fn response_parse_failed(message: String) -> Self {
+        AiError::ResponseParseFailed {
+            code: codes::ai::INVALID_RESPONSE,
+            message,
+        }
+    }
+    pub fn timeout(message: String) -> Self {
+        AiError::Timeout {
+            code: codes::ai::ALL,
+            message,
+        }
+    }
+    pub fn streaming_error(message: String) -> Self {
+        AiError::StreamingError {
+            code: codes::ai::ALL,
+            message,
+        }
+    }
     /// Get the error code
     pub fn code(&self) -> &'static str {
         match self {
@@ -39,54 +77,37 @@ impl AiError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::core::errors::codes;
 
     #[test]
     fn test_ai_error() {
-        let api_error = AiError::ApiCallFailed {
-            code: "api_call_failed",
-            message: "API call failed".to_string(),
-        };
+        let api_error = AiError::api_call_failed("API call failed".to_string());
         assert!(api_error.to_string().contains("API call failed"));
-        assert_eq!(api_error.code(), "api_call_failed");
+        assert_eq!(api_error.code(), codes::ai::API_CALL_FAILED);
         
-        let auth_error = AiError::AuthenticationFailed {
-            code: "authentication_failed",
-            message: "Invalid token".to_string(),
-        };
+        let auth_error = AiError::authentication_failed("Invalid token".to_string());
         assert!(auth_error.to_string().contains("Authentication failed"));
         assert!(auth_error.to_string().contains("Invalid token"));
-        assert_eq!(auth_error.code(), "authentication_failed");
+        assert_eq!(auth_error.code(), codes::ai::ALL);
         
-        let quota_error = AiError::QuotaExceeded {
-            code: "quota_exceeded",
-            message: "Rate limit exceeded".to_string(),
-        };
+        let quota_error = AiError::quota_exceeded("Rate limit exceeded".to_string());
         assert!(quota_error.to_string().contains("Quota exceeded"));
         assert!(quota_error.to_string().contains("Rate limit exceeded"));
-        assert_eq!(quota_error.code(), "quota_exceeded");
+        assert_eq!(quota_error.code(), codes::ai::ALL);
         
-        let parse_error = AiError::ResponseParseFailed {
-            code: "response_parse_failed",
-            message: "Invalid JSON".to_string(),
-        };
+        let parse_error = AiError::response_parse_failed("Invalid JSON".to_string());
         assert!(parse_error.to_string().contains("Response parse failed"));
         assert!(parse_error.to_string().contains("Invalid JSON"));
-        assert_eq!(parse_error.code(), "response_parse_failed");
+        assert_eq!(parse_error.code(), codes::ai::INVALID_RESPONSE);
         
-        let timeout_error = AiError::Timeout {
-            code: "timeout",
-            message: "Request timeout".to_string(),
-        };
+        let timeout_error = AiError::timeout("Request timeout".to_string());
         assert!(timeout_error.to_string().contains("Timeout"));
         assert!(timeout_error.to_string().contains("Request timeout"));
-        assert_eq!(timeout_error.code(), "timeout");
+        assert_eq!(timeout_error.code(), codes::ai::ALL);
         
-        let streaming_error = AiError::StreamingError {
-            code: "streaming_error",
-            message: "Stream interrupted".to_string(),
-        };
+        let streaming_error = AiError::streaming_error("Stream interrupted".to_string());
         assert!(streaming_error.to_string().contains("Streaming error"));
         assert!(streaming_error.to_string().contains("Stream interrupted"));
-        assert_eq!(streaming_error.code(), "streaming_error");
+        assert_eq!(streaming_error.code(), codes::ai::ALL);
     }
 } 

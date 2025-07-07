@@ -31,7 +31,7 @@ impl TextRange {
 }
 
 /// 字节范围 (用于 Tree-sitter)
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Span {
     pub start: usize,
     pub end: usize,

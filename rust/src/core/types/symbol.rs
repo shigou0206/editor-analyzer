@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use super::span::Span;
 use super::document::FileId;
+use crate::core::traits::symbol::SymbolHandle;
 
 /// 符号类型
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -19,7 +20,7 @@ pub enum SymbolKind {
 }
 
 /// 符号信息
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Symbol {
     pub id: String,
     pub name: String,
@@ -47,8 +48,40 @@ impl Symbol {
     }
 }
 
+impl SymbolHandle for Symbol {
+    fn id(&self) -> &str {
+        &self.id
+    }
+    
+    fn name(&self) -> &str {
+        &self.name
+    }
+    
+    fn kind(&self) -> &SymbolKind {
+        &self.kind
+    }
+    
+    fn span(&self) -> &Span {
+        &self.span
+    }
+    
+    fn scope_id(&self) -> Option<&str> {
+        self.scope_id.as_deref()
+    }
+    
+    fn is_exported(&self) -> bool {
+        // 简单实现：函数和类默认认为是导出的
+        matches!(self.kind, SymbolKind::Function | SymbolKind::Class | SymbolKind::Module)
+    }
+    
+    fn is_mutable(&self) -> bool {
+        // 简单实现：变量默认认为是可变的
+        matches!(self.kind, SymbolKind::Variable)
+    }
+}
+
 /// 引用信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Reference {
     pub symbol_id: String,
     pub span: Span,

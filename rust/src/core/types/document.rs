@@ -25,7 +25,7 @@ impl From<String> for FileId {
 }
 
 /// 文本文档
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct TextDocument {
     pub file_id: FileId,
     pub content: String,
@@ -50,13 +50,24 @@ impl TextDocument {
 }
 
 /// 文件上下文
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct FileContext {
     pub file_id: FileId,
     pub project_root: Option<String>,
     pub dependencies: Vec<String>,
     pub metadata: HashMap<String, serde_json::Value>,
 }
+
+impl PartialEq for FileContext {
+    fn eq(&self, other: &Self) -> bool {
+        self.file_id == other.file_id &&
+        self.project_root == other.project_root &&
+        self.dependencies == other.dependencies
+        // Note: metadata is excluded from equality comparison due to HashMap
+    }
+}
+
+impl Eq for FileContext {}
 
 impl FileContext {
     pub fn new(file_id: FileId) -> Self {
@@ -80,7 +91,7 @@ impl FileContext {
 }
 
 /// 源代码
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct SourceCode {
     pub content: String,
     pub language: Language,

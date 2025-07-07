@@ -5,8 +5,8 @@ pub trait AstNode {
     fn kind(&self) -> &str;
     fn text(&self) -> &str;
     fn span(&self) -> Span;
-    fn children(&self) -> Vec<Self> where Self: Sized;
-    fn parent(&self) -> Option<Self> where Self: Sized;
+    fn children(&self) -> Vec<Box<dyn AstNode>>;
+    fn parent(&self) -> Option<Box<dyn AstNode>>;
 }
 
 /// AST abstraction interface

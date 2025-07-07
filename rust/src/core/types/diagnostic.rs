@@ -11,12 +11,13 @@ pub enum Severity {
 }
 
 /// 诊断信息
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Diagnostic {
     pub severity: Severity,
     pub message: String,
     pub span: Span,
     pub code: Option<String>,
+    pub source: Option<String>,
     pub fixable: bool,
     pub suggestions: Vec<String>,
 }
@@ -28,6 +29,7 @@ impl Diagnostic {
             message,
             span,
             code: None,
+            source: None,
             fixable: false,
             suggestions: Vec::new(),
         }
@@ -35,6 +37,11 @@ impl Diagnostic {
 
     pub fn with_code(mut self, code: String) -> Self {
         self.code = Some(code);
+        self
+    }
+
+    pub fn with_source(mut self, source: String) -> Self {
+        self.source = Some(source);
         self
     }
 
@@ -50,7 +57,7 @@ impl Diagnostic {
 }
 
 /// 修复命令
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FixCommand {
     pub title: String,
     pub kind: FixKind,
@@ -68,7 +75,7 @@ impl FixCommand {
 }
 
 /// 修复类型
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum FixKind {
     Replace,
     Insert,
@@ -77,7 +84,7 @@ pub enum FixKind {
 }
 
 /// 文本编辑
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct TextEdit {
     pub span: Span,
     pub new_text: String,
@@ -109,11 +116,15 @@ mod tests {
         assert_eq!(diagnostic.message, "Test error");
         assert_eq!(diagnostic.span, span);
         assert!(!diagnostic.fixable);
+        assert!(diagnostic.source.is_none());
         
         let diagnostic_with_code = diagnostic.with_code("E001".to_string());
         assert_eq!(diagnostic_with_code.code, Some("E001".to_string()));
         
-        let diagnostic_fixable = diagnostic_with_code.with_fixable(true);
+        let diagnostic_with_source = diagnostic_with_code.with_source("rustc".to_string());
+        assert_eq!(diagnostic_with_source.source, Some("rustc".to_string()));
+        
+        let diagnostic_fixable = diagnostic_with_source.with_fixable(true);
         assert!(diagnostic_fixable.fixable);
     }
 
