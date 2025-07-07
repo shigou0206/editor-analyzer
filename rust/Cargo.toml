@@ -1,0 +1,43 @@
+[package]
+name = "rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 序列化
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Tree-sitter 解析
+tree-sitter = "0.20"
+tree-sitter-python = "0.20"
+tree-sitter-json = "0.20"
+
+# Flutter Rust Bridge
+flutter_rust_bridge = "1"
+
+# HTTP 客户端 (AI API)
+reqwest = { version = "0.11", features = ["json", "stream"] }
+tokio = { version = "1", features = ["full"] }
+
+# 错误处理
+anyhow = "1"
+thiserror = "1"
+
+# 异步流
+futures = "0.3"
+
+# 哈希和缓存
+dashmap = "5"
+uuid = { version = "1", features = ["v4"] }
+
+# 配置管理
+serde_yaml = "0.9"
+
+# 日志
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[dev-dependencies]
+criterion = "0.6.0"
+tokio-test = "0.4" 

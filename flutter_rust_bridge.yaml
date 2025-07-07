@@ -1,0 +1,4 @@
+rust_input: rust/src/lib.rs
+dart_output: editor_app/lib/bridge/generated.dart
+rust_output: bridge/generated.rs
+dart_decl_output: bridge/bridge_definitions.dart
