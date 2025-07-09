@@ -1,0 +1,18 @@
+[workspace]
+members = [ "rpa-annotate-snippets", "rpa-macros", "rpa-python-stdlib", "rpa-python-trivia","rpa-source-file", "rpa-text-size"]
+
+resolver = "2"
+
+[workspace.dependencies]
+memchr = "2.6"
+serde = { version = "1.0", features = ["derive"] }
+get-size2 = "0.1"
+itertools = "0.12"
+unicode-ident = "1.0"
+bitflags = "2"
+heck = "0.4"
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["derive", "parsing", "extra-traits", "full"] }
+anstyle = "1.0"
+unicode-width = "0.1"

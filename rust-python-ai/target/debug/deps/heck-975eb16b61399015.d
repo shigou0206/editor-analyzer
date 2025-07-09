@@ -1,0 +1,13 @@
+/Users/sryu/projects/v2/editor-analyzer/rust-python-ai/target/debug/deps/libheck-975eb16b61399015.rmeta: /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lib.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/kebab.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lower_camel.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_kebab.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_snake.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/snake.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/title.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/train.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/upper_camel.rs
+
+/Users/sryu/projects/v2/editor-analyzer/rust-python-ai/target/debug/deps/heck-975eb16b61399015.d: /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lib.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/kebab.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lower_camel.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_kebab.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_snake.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/snake.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/title.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/train.rs /Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/upper_camel.rs
+
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lib.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/kebab.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/lower_camel.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_kebab.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/shouty_snake.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/snake.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/title.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/train.rs:
+/Users/sryu/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heck-0.4.1/src/upper_camel.rs:

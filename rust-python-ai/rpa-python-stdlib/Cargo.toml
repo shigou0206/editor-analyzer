@@ -1,0 +1,9 @@
+[package]
+name = "rpa-python-stdlib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bitflags = { workspace = true }
+unicode-ident = { workspace = true }
+

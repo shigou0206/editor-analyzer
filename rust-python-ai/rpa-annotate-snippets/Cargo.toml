@@ -1,0 +1,13 @@
+[package]
+name = "rpa-annotate-snippets"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+testing-colors = []
+
+[dependencies]
+anstyle = { workspace = true }
+memchr = { workspace = true }
+unicode-width = { workspace = true }

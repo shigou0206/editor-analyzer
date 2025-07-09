@@ -1,0 +1,15 @@
+[package]
+name = "rpa-source-file"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rpa-text-size = { path = "../rpa-text-size" }
+memchr.workspace = true
+serde = { workspace = true, optional = true }
+get-size2 = { workspace = true, optional = true }
+
+[features]
+default = []
+serde = ["dep:serde"]
+get-size = ["dep:get-size2"]

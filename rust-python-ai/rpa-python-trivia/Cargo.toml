@@ -1,0 +1,10 @@
+[package]
+name = "rpa-python-trivia"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rpa-source-file = { path = "../rpa-source-file" }
+rpa-text-size = { path = "../rpa-text-size" }
+itertools.workspace = true
+unicode-ident.workspace = true
