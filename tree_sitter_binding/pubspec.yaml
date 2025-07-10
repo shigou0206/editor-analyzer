@@ -1,0 +1,12 @@
+name: tree_sitter_binding
+description: Dart FFI binding for Tree-sitter python
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  ffi: ^2.0.2
+
+dev_dependencies:
+  ffigen: ^9.0.0

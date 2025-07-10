@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'widgets/vs_code_editor.dart';
+import 'services/tree_sitter_enhanced.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化 Tree-sitter Enhanced
+  try {
+    await TreeSitterEnhanced.instance.initialize();
+    print('✅ Tree-sitter Enhanced 初始化成功');
+  } catch (e) {
+    print('❌ Tree-sitter Enhanced 初始化失败: $e');
+  }
+
   runApp(const MyApp());
 }
 

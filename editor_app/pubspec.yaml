@@ -58,6 +58,9 @@ dependencies:
   # Utilities
   uuid: ^4.2.1
   json_annotation: ^4.8.1
+  
+  # FFI for Tree-sitter
+  ffi: ^2.1.0
 
 dev_dependencies:
   flutter_test:

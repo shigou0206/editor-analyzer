@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
-import '../services/tokenizer_service.dart';
-import '../services/syntax_highlighter.dart';
+import '../services/tree_sitter_enhanced.dart';
 
 class VSCodeEditor extends StatefulWidget {
   final String initialCode;
@@ -20,8 +19,7 @@ class VSCodeEditor extends StatefulWidget {
 
 class _VSCodeEditorState extends State<VSCodeEditor> {
   late final SyntaxTextEditingController _controller;
-  final TokenizerService _tokenizer = TokenizerService();
-  final SyntaxHighlighter _highlighter = SyntaxHighlighter();
+  final TreeSitterEnhanced _treeSitter = TreeSitterEnhanced.instance;
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _editableTextKey = GlobalKey();
@@ -39,8 +37,7 @@ class _VSCodeEditorState extends State<VSCodeEditor> {
     super.initState();
     _controller = SyntaxTextEditingController(
       text: widget.initialCode,
-      tokenizer: _tokenizer,
-      highlighter: _highlighter,
+      treeSitter: _treeSitter,
     );
     _controller.addListener(_onTextChanged);
   }
@@ -582,13 +579,11 @@ class _VSCodeEditorState extends State<VSCodeEditor> {
 }
 
 class SyntaxTextEditingController extends TextEditingController {
-  final TokenizerService tokenizer;
-  final SyntaxHighlighter highlighter;
+  final TreeSitterEnhanced treeSitter;
   int _tokenCount = 0;
 
   SyntaxTextEditingController({
-    required this.tokenizer,
-    required this.highlighter,
+    required this.treeSitter,
     String? text,
   }) : super(text: text) {
     _updateTokenCount();
@@ -597,7 +592,7 @@ class SyntaxTextEditingController extends TextEditingController {
   int get tokenCount => _tokenCount;
 
   void _updateTokenCount() {
-    final tokens = tokenizer.tokenize(text);
+    final tokens = treeSitter.highlight(text);
     _tokenCount = tokens.length;
   }
 
@@ -613,16 +608,8 @@ class SyntaxTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final tokens = tokenizer.tokenize(text);
-    final spans = highlighter.buildTokenSpans(text, tokens);
-
-    // 更新token计数
-    _tokenCount = tokens.length;
-
-    return TextSpan(
-      style: style,
-      children: spans,
-    );
+    // 直接使用 Tree-sitter Enhanced 的 buildTextSpan 方法
+    return treeSitter.buildTextSpan(text, baseStyle: style);
   }
 
   // 辅助方法：将Token位置转换为TextPosition

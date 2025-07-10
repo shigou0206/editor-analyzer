@@ -1,0 +1,26 @@
+output: lib/src/tree_sitter_bindings.dart
+name: TreeSitter
+headers:
+  entry-points:
+    - api.h
+  include-directives:
+    - '**/*.h'
+compiler-opts:
+  - '-I.'
+functions:
+  include:
+    - 'ts_.*'
+  exclude:
+    - 'ts_language_.*'
+structs:
+  include:
+    - 'TS.*'
+typedefs:
+  include:
+    - 'TS.*'
+enums:
+  include:
+    - 'TS.*'
+macros:
+  include:
+    - 'TREE_SITTER_.*'
